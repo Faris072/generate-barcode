@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Generator;
+use App\Models\Files;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -38,15 +39,25 @@ class generatorController extends Controller
     public function store(Request $request)
     {
         try{
+            $messages = [
+                'no_surat.required' => 'No Surat wajib di isi',
+                'nama_ttd.required' => 'Nama Tanda Tangan wajib di isi',
+                'tanggal_ttd.required' => 'Tanggal Tanda Tangan wajib di isi',
+                'email_no_hp.required' => 'Email / No HP wajib di isi',
+                'perihal.required' => 'Perihal wajib di'
+            ];
+
             $validatedData = Validator::make($request->all(),[
                 'no_surat' => 'required',
                 'nama_ttd' => 'required',
-                'tanggal_ttd' => 'required'
-            ]);
+                'tanggal_ttd' => 'required',
+                'email_no_hp' => 'required',
+                'perihal' => 'required'
+            ], $messages);
 
             if($validatedData->fails()){
                 return response()->json([
-                    'messages' => $validatedData->messages()
+                    'messages' => $validatedData->messages(),
                 ],400);
             };
 
@@ -62,18 +73,29 @@ class generatorController extends Controller
             ]);
 
             if($post){
-                Generator::where('rand_id', $rand_id)->get();
                 $file = public_path('storage\barcode-'.$rand_id.'.png');
                 $path = asset('storage\barcode-'.$rand_id.'.png');
                 $id = Generator::where('rand_id', $rand_id)->first();
-                // @dd($id);
+
+                if($request->file('file')){
+                    $fileExtension = $request->file('file')->getClientOriginalExtension();
+                    $fileName = rand(100000,10000000000);
+                    $fileName = $fileName.'.'.$fileExtension;
+                    $request->file('file')->storeAs('public/file',$fileName);
+                    Files::create([
+                        'generator_id' => $id->id,
+                        'name' => $fileName,
+                        'size' => $request->file('file')->getSize(),
+                        'path' => asset('storage/file/'.$fileName),
+                    ]);
+                }
+
                 \QRCode::url(url('/view-barcode?id='.$id->id))->setSize(7)->setOutfile($file)->png();
                 return response()->json([
                     'status' => 'Berhasil',
                     'code' => '200',
                     'messages' => 'Generate berhasil',
                     'data' => [
-                        'messages' => 'Generate Berhasil',
                         'files' => [
                             'path' => $file,
                             'asset' => $path

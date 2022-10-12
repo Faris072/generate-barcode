@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::group(['middleware' => 'api'], function(){
+// Route::group(['middleware' => 'api'], function(){
     Route::post('generate','App\Http\Controllers\Api\generatorController@store');
     Route::get('view-barcode/{id}','App\Http\Controllers\Api\generatorController@show');
-});
+// });

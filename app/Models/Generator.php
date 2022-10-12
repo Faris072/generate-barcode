@@ -12,4 +12,7 @@ class generator extends Model
     protected $table = 'generator';
     protected $guarded = ['id'];
 
+    public function files(){
+        return $this->hasMany(Files::class, 'generator_id', 'id');
+    }
 }

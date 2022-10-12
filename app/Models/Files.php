@@ -11,4 +11,8 @@ class Files extends Model
 
     protected $table = 'files';
     protected $guarded = ['id'];
+
+    public function generator(){
+        return $this->belongsTo(Generator::class, 'generator_id', 'id');
+    }
 }

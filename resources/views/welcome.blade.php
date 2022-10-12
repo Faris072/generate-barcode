@@ -25,6 +25,21 @@
                     <label for="perihal">Perihal</label>
                     <input type="text" class="form-control" id="perihal" name="perihal" placeholder="Perihal">
                     <br>
+                    <center>
+                        <div class="preview-file d-none py-4" style="width:40%;">
+                            <img src="" alt="" style="width:100%;">
+                            <br>
+                            <left>
+                                <p>
+                                    <span>File Name: <span id="file-name"></span></span><br>
+                                    <span>File Size: <span id="file-size"></span></span><br>
+                                    <span>File Type: <span id="file-type"></span></span><br>
+                                </p>
+                            </left>
+                        </div>
+                        <label for="upload-file" class="btn btn-warning" style="color:white">Select File</label>
+                        <input type="file" class="d-none" id="upload-file">
+                    </center>
                     {{-- <div class="card dropzone">
                         <div class="card-body">
                             Drop file atau klik disini
@@ -39,5 +54,8 @@
         </div>
     </div>
 </div>
+<script>
+    let assetUrl = `{{ asset('/assets')}}/`
+</script>
 <script src="{{asset('assets/js/form.js')}}"></script>
 @endsection
