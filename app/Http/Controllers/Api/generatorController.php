@@ -75,22 +75,33 @@ class generatorController extends Controller
             if($post){
                 $file = public_path('storage\barcode-'.$rand_id.'.png');
                 $path = asset('storage\barcode-'.$rand_id.'.png');
-                $id = Generator::where('rand_id', $rand_id)->first();
+                $barcode = Generator::where('rand_id', $rand_id)->first();
 
                 if($request->file('file')){
                     $fileExtension = $request->file('file')->getClientOriginalExtension();
                     $fileName = rand(100000,10000000000);
                     $fileName = $fileName.'.'.$fileExtension;
                     $request->file('file')->storeAs('public/file',$fileName);
-                    Files::create([
-                        'generator_id' => $id->id,
+                    $uploadFile = Files::create([
+                        'generator_id' => $barcode->id,
                         'name' => $fileName,
                         'size' => $request->file('file')->getSize(),
                         'path' => asset('storage/file/'.$fileName),
                     ]);
+
+                    if($uploadFile){
+                        $fileData = Generator::with('fileUpload')->get();
+                        \QRCode::url(url('/view-barcode?id='.$barcode->id))->setSize(7)->setOutfile($file)->png();
+                        return response()->json([
+                            'status' => 'Berhasil',
+                            'code' => '200',
+                            'messages' => 'Generate berhasil',
+                            'data' => $fileData
+                        ],200);
+                    }
                 }
 
-                \QRCode::url(url('/view-barcode?id='.$id->id))->setSize(7)->setOutfile($file)->png();
+                \QRCode::url(url('/view-barcode?id='.$barcode->id))->setSize(7)->setOutfile($file)->png();
                 return response()->json([
                     'status' => 'Berhasil',
                     'code' => '200',
@@ -100,7 +111,7 @@ class generatorController extends Controller
                             'path' => $file,
                             'asset' => $path
                         ],
-                        'data' => $id
+                        'data' => $barcode
                     ]
                 ],200);
             }
