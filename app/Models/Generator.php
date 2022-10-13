@@ -12,7 +12,7 @@ class generator extends Model
     protected $table = 'generator';
     protected $guarded = ['id'];
 
-    public function fileUpload(){
+    public function file_upload(){
         return $this->hasMany(Files::class, 'id');//PK nya di table files
     }
 }

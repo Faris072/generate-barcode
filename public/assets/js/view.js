@@ -17,9 +17,14 @@ function getData(){
             $('#tanggal-ttd').val(data.tanggal_ttd);
             $('#email-no-hp').val(data.email_no_hp);
             $('#perihal').val(data.perihal);
+            data?.file_upload ? $('.preview-file').removeClass('d-none') : '';
+            $('#file-name').html(data?.file_upload[0]?.name);
+            $('#file-size').html(data?.file_upload[0]?.size);
+            $('#download-file').attr('href',data?.file_upload[0]?.path);
         },
         error: function(data){
             console.log(data);
         }
     });
 }
+

@@ -25,11 +25,19 @@
                     <label for="perihal">Perihal</label>
                     <input type="text" disabled class="form-control" id="perihal" name="perihal" placeholder="Perihal">
                     <br>
-                    {{-- <div class="card dropzone">
-                        <div class="card-body">
-                            Drop file atau klik disini
+                    <center>
+                        <div class="preview-file d-none py-4" style="width:40%;">
+                            {{-- <img src="" alt="" style="width:100%;"> --}}
+                            <br>
+                                <p>
+                                    <span>File Name: <span id="file-name"></span></span><br>
+                                    <span>File Size: <span id="file-size"></span></span><br>
+                                    {{-- <span>File Type: <span id="file-type"></span></span><br> --}}
+                                </p>
                         </div>
-                    </div> --}}
+                        {{-- <label for="upload-file" class="btn btn-warning" style="color:white">Select File</label> --}}
+                        <a href="javascript:;" class="btn btn-primary" id="download-file" download>Download File</a>
+                    </center>
                     <br><br>
                 </div>
             </div>

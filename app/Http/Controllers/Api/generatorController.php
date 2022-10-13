@@ -90,13 +90,26 @@ class generatorController extends Controller
                     ]);
 
                     if($uploadFile){
-                        $fileData = Generator::with('fileUpload')->get();
+                        // cara 1
+                        // $fileData = Generator::with('file_upload')->find($barcode->id);
+                        //cara 2
+                        // $fileData = Generator::with('file_upload')->get();
+                        // cara 3
+                        $fileData = Generator::where('rand_id', $rand_id)->first();
+                        $fileData2 = Files::where('generator_id',$barcode->id)->first();
+                        $fileData['file_upload'] = $fileData2;
                         \QRCode::url(url('/view-barcode?id='.$barcode->id))->setSize(7)->setOutfile($file)->png();
                         return response()->json([
                             'status' => 'Berhasil',
                             'code' => '200',
                             'messages' => 'Generate berhasil',
-                            'data' => $fileData
+                            'data' => [
+                                'barcode' => [
+                                    'path' => $file,
+                                    'asset' => $path
+                                ],
+                                'data' => $fileData
+                            ]
                         ],200);
                     }
                 }
@@ -107,7 +120,7 @@ class generatorController extends Controller
                     'code' => '200',
                     'messages' => 'Generate berhasil',
                     'data' => [
-                        'files' => [
+                        'barcode' => [
                             'path' => $file,
                             'asset' => $path
                         ],
@@ -136,7 +149,7 @@ class generatorController extends Controller
     public function show($id)
     {
         try{
-            $data = Generator::find($id);
+            $data = Generator::with('file_upload')->find($id);
             // @dd($data);
             return response()->json($data,200);
         }

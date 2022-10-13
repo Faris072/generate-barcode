@@ -43,7 +43,7 @@ function generate(){
         },
         success: function(data){
             console.log(data);
-            $('#btn-download').show(500).attr('href',data?.data?.files?.asset);
+            $('#btn-download').show(500).attr('href',data?.data?.barcode?.asset);
         },
         error: function(xhr){
             console.log(xhr);
